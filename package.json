@@ -1,0 +1,14 @@
+{
+  "name": "E2NCalculator",
+  "version": "0.0.1",
+  "description": "This extension calculates the time you worked in specific weeks and since my first day of this month.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:local": "web-ext sign"
+  },
+  "author": "David Merz",
+  "license": "GPL-3.0",
+  "devDependencies": {},
+  "dependencies": {}
+}

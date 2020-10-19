@@ -1,0 +1,32 @@
+{
+  "name": "E2NCalculator",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "This extension calculates the time you worked in specific weeks and since my first day of this month.",
+  "homepage_url": "https://github.com/DavidM42/E2NCalculator",
+  "icons": {
+    "16": "icons/e2n16.png",
+    "32": "icons/e2n32.png",
+    "48": "icons/e2n48.png",
+    "128": "icons/e2n128.png"
+  },
+  "background": {
+    "scripts": [
+      "src/bg/background.js"
+    ]
+  },
+  "permissions": [
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://perso.e2n.de/secure/arbeitszeiten/index.jsf"
+      ],
+      "run_at": "document_end",
+      "js": [
+        "src/inject/date-de-DE.js",
+        "src/inject/calculate.js"
+      ]
+    }
+  ]
+}
