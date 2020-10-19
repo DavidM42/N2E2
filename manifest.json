@@ -27,6 +27,15 @@
         "src/inject/date-de-DE.js",
         "src/inject/calculate.js"
       ]
+    },
+    {
+      "matches": [
+        "https://perso.e2n.de/secure/index.jsf"
+      ],
+      "run_at": "document_end",
+      "js": [
+        "src/inject/index.js"
+      ]
     }
   ]
 }
