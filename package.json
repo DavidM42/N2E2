@@ -1,6 +1,6 @@
 {
   "name": "E2NCalculator",
-  "version": "0.0.1",
+  "version": "0.0.1-internship",
   "description": "This extension calculates the time you worked in specific weeks and since my first day of this month.",
   "main": "index.js",
   "scripts": {
