@@ -1,4 +1,6 @@
 const abrechnungStartingDay = 19;
+const praktikumHours = 400;
+const praktikumStart = new Date(2020, 09, 01);
 
 const parseMinutes = (durationRawText) => {
   const hours = parseInt(durationRawText.split('Std.')[0].trim(), 10);
@@ -40,6 +42,8 @@ window.addEventListener('load', () => {
     pause: 0
   };
 
+  let praktikumMinutesDone = 0;
+
   for (let h of headlines) {
 
     const rawDate = h.querySelector('div').innerText.split('\n')[1];
@@ -73,6 +77,10 @@ window.addEventListener('load', () => {
       minutesSincePreviousMonthStarted.work += durationMinutesWork;
       minutesSincePreviousMonthStarted.pause += durationMinutesPause;
     }
+
+    if (dt >= praktikumStart) {
+      praktikumMinutesDone += durationMinutesWork;
+    }
   }
   // console.log(timeMinutesByWeek);
 
@@ -99,7 +107,10 @@ window.addEventListener('load', () => {
   const lastWeekText = 'Tast week: ' + minutesToHuman(timeMinutesByWeek[thisWeek-1].work);
   const thisMonthtext = 'Abrechnungs month: ' + minutesToHuman(minutesSinceMonthStarted.work);
   const lastMonthText = 'Previous abrechnungs month: ' + minutesToHuman(minutesSincePreviousMonthStarted.work);
-  const textArr = [title, thisWeekText, lastWeekText, thisMonthtext, lastMonthText];
+
+  const praktikumPercent = Math.round(((praktikumMinutesDone / (praktikumHours * 60)) * 100) * 100) / 100;
+  const prakikumProgress = 'Progress Praktikum: Hours Done: ' + minutesToHuman(praktikumMinutesDone)  + ' (' + praktikumPercent + ('% von 400 Stunden)');
+  const textArr = [title, thisWeekText, lastWeekText, thisMonthtext, lastMonthText, prakikumProgress];
 
   infoElement.querySelector('#infoContent').innerText = textArr.join('\n');
 });
