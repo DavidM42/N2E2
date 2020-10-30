@@ -27,7 +27,10 @@ if (startDateCurrentMonth > today) {
   startDatePreviousMonth = new Date(currentYear, today.getMonth()-2, abrechnungStartingDay);
 }
 
-window.addEventListener('load', () => {
+/**
+ * Main function to do the work
+ */
+const calculate = () => {
   const headlines = document.querySelectorAll('.headline ');
 
   const timeMinutesByWeek = {};
@@ -53,12 +56,19 @@ window.addEventListener('load', () => {
                       parseInt(parts[0], 10));
 
     const clockIcon = h.parentElement.querySelector('.fa-clock');
+    if (!clockIcon) {
+      // No time worked in this entry so just skip
+      continue;
+    }
     const durationRawText = clockIcon.parentElement.innerText;
     const durationMinutesWork = parseMinutes(durationRawText);
 
     const coffeIcon = h.parentElement.querySelector('.fa-coffee');
-    const pauseDurationRawText = coffeIcon.parentElement.innerText;
-    const durationMinutesPause = parseMinutes(pauseDurationRawText);
+    let durationMinutesPause = 0;
+    if (coffeIcon) {
+      const pauseDurationRawText = coffeIcon.parentElement.innerText;
+      durationMinutesPause = parseMinutes(pauseDurationRawText);
+    }
 
     if (!timeMinutesByWeek[dt.getWeek()]) {
       timeMinutesByWeek[dt.getWeek()] = {
@@ -103,14 +113,45 @@ window.addEventListener('load', () => {
   counterRow.parentElement.insertBefore(infoElement, counterRow);
 
   const title = 'Worked: ';
+  const textArr = [title];
+
+
   const thisWeekText = 'This week: ' + minutesToHuman(timeMinutesByWeek[thisWeek].work);
-  const lastWeekText = 'Tast week: ' + minutesToHuman(timeMinutesByWeek[thisWeek-1].work);
+  textArr.push(thisWeekText);
+
+  if (timeMinutesByWeek[thisWeek-1]) {
+    const lastWeekText = 'Tast week: ' + minutesToHuman(timeMinutesByWeek[thisWeek-1].work);
+    textArr.push(lastWeekText);
+  }
   const thisMonthtext = 'Abrechnungs month: ' + minutesToHuman(minutesSinceMonthStarted.work);
+  textArr.push(thisMonthtext);
+
   const lastMonthText = 'Previous abrechnungs month: ' + minutesToHuman(minutesSincePreviousMonthStarted.work);
+  textArr.push(lastMonthText);
 
   const praktikumPercent = Math.round(((praktikumMinutesDone / (praktikumHours * 60)) * 100) * 100) / 100;
   const prakikumProgress = 'Progress Praktikum: Hours Done: ' + minutesToHuman(praktikumMinutesDone)  + ' (' + praktikumPercent + ('% von 400 Stunden)');
-  const textArr = [title, thisWeekText, lastWeekText, thisMonthtext, lastMonthText, prakikumProgress];
+  textArr.push(prakikumProgress);
 
   infoElement.querySelector('#infoContent').innerText = textArr.join('\n');
+
+  // re add button event listener to new html elements
+  setTimeout(() => addButtonEventListeners(), 600);
+};
+
+const addButtonEventListeners = () => {
+  const eventListenerCallback = () => {
+    setTimeout(() => calculate(), 600);
+  };
+
+  const butons = document.querySelectorAll('a.btn');
+  for (let b of butons) {
+    b.removeEventListener('click', eventListenerCallback);
+    b.addEventListener('click', eventListenerCallback);
+  }
+};
+
+window.addEventListener('load', () => {
+  calculate();
+  addButtonEventListeners();
 });
