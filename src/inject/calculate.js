@@ -12,6 +12,10 @@ const minutesToHuman = (minutes) => {
   return Math.floor(minutes / 60) + ' Stunden ' + minutes % 60 + ' Minuten';
 };
 
+const minutesToDecimalHours = (minutes) => {
+  return minutes / 60;
+};
+
 const today = Date.today();
 // testing option
 // const today = Date.parse('yesterday');
@@ -105,12 +109,19 @@ const calculate = () => {
       </div>
     </div>
   `;
-  const infoElement = document.createElement('div');
+
+  // const previouseInfo = document.getElementById('infoContent');
+  let infoElement = document.createElement('div');
+  // if (!!previouseInfo) {
+  //   infoElement = previouseInfo;
+  // }
   infoElement.innerHTML = htmlInfoString;
 
+  // if (!previouseInfo) {
   const counterIcon = document.querySelector('.counter-icon');
   const counterRow = counterIcon.parentElement.parentElement.parentElement.parentElement;
   counterRow.parentElement.insertBefore(infoElement, counterRow);
+  // }
 
   const title = 'Worked: ';
   const textArr = [title];
@@ -120,7 +131,7 @@ const calculate = () => {
   textArr.push(thisWeekText);
 
   if (timeMinutesByWeek[thisWeek-1]) {
-    const lastWeekText = 'Tast week: ' + minutesToHuman(timeMinutesByWeek[thisWeek-1].work);
+    const lastWeekText = 'Last week: ' + minutesToHuman(timeMinutesByWeek[thisWeek-1].work);
     textArr.push(lastWeekText);
   }
   const thisMonthtext = 'Abrechnungs month: ' + minutesToHuman(minutesSinceMonthStarted.work);
@@ -130,7 +141,7 @@ const calculate = () => {
   textArr.push(lastMonthText);
 
   const praktikumPercent = Math.round(((praktikumMinutesDone / (praktikumHours * 60)) * 100) * 100) / 100;
-  const prakikumProgress = 'Progress Praktikum: Hours Done: ' + minutesToHuman(praktikumMinutesDone)  + ' (' + praktikumPercent + ('% von 400 Stunden)');
+  const prakikumProgress = 'Progress Praktikum: Hours Done: ' + minutesToHuman(praktikumMinutesDone)  + ' (' + minutesToDecimalHours(praktikumMinutesDone) + 'h/' + praktikumPercent + ('% von 400 Stunden)');
   textArr.push(prakikumProgress);
 
   infoElement.querySelector('#infoContent').innerText = textArr.join('\n');
