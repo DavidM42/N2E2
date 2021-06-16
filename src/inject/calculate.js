@@ -1,6 +1,4 @@
 const abrechnungStartingDay = 19;
-const praktikumHours = 400;
-const praktikumStart = new Date(2020, 09, 01);
 
 const parseMinutes = (durationRawText) => {
   const hours = parseInt(durationRawText.split('Std.')[0].trim(), 10);
@@ -32,6 +30,22 @@ if (startDateCurrentMonth > today) {
 }
 
 /**
+ * Generic element change subscription helper
+ * @param {HTMLElement} selector HTMl Element to observe
+ * @param {Function} callback Callback to execute on change
+ */
+function onElementChange(selector, callback) {
+  new MutationObserver((mutationsList, observer) => {
+    callback();
+  })
+  .observe(selector, {
+    subtree: true,
+    childList: true
+  });
+}
+
+
+/**
  * Main function to do the work
  */
 const calculate = () => {
@@ -48,8 +62,6 @@ const calculate = () => {
     work: 0,
     pause: 0
   };
-
-  let praktikumMinutesDone = 0;
 
   for (let h of headlines) {
 
@@ -84,48 +96,40 @@ const calculate = () => {
     timeMinutesByWeek[dt.getWeek()].work += durationMinutesWork;
     timeMinutesByWeek[dt.getWeek()].pause += durationMinutesPause;
 
-    if (dt > startDateCurrentMonth) {
+    if (dt >= startDateCurrentMonth) {
       minutesSinceMonthStarted.work += durationMinutesWork;
       minutesSinceMonthStarted.pause += durationMinutesPause;
-    } else if(dt < startDateCurrentMonth && dt > startDatePreviousMonth) {
+    } else if(dt < startDateCurrentMonth && dt >= startDatePreviousMonth) {
       minutesSincePreviousMonthStarted.work += durationMinutesWork;
       minutesSincePreviousMonthStarted.pause += durationMinutesPause;
-    }
-
-    if (dt >= praktikumStart) {
-      praktikumMinutesDone += durationMinutesWork;
     }
   }
   // console.log(timeMinutesByWeek);
 
   const htmlInfoString = `
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-block p-35 clearfix" id="infoContent">
-          
-          </div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-block p-35 clearfix" id="infoContent">
+        
         </div>
       </div>
     </div>
   `;
 
-  // const previouseInfo = document.getElementById('infoContent');
+  const previouseInfo = document.getElementById('e2n-calc-row');
   let infoElement = document.createElement('div');
-  // if (!!previouseInfo) {
-  //   infoElement = previouseInfo;
-  // }
+  infoElement.id = 'e2n-calc-row';
+  infoElement.classList.add('row');
+  if (previouseInfo) {
+    infoElement = previouseInfo;
+  }
   infoElement.innerHTML = htmlInfoString;
 
-  // if (!previouseInfo) {
   const counterIcon = document.querySelector('.counter-icon');
   const counterRow = counterIcon.parentElement.parentElement.parentElement.parentElement;
   counterRow.parentElement.insertBefore(infoElement, counterRow);
-  // }
 
-  const title = 'Worked: ';
-  const textArr = [title];
-
+  const textArr = [];
 
   const thisWeekText = 'This week: ' + minutesToHuman(timeMinutesByWeek[thisWeek].work);
   textArr.push(thisWeekText);
@@ -137,32 +141,23 @@ const calculate = () => {
   const thisMonthtext = 'Abrechnungs month: ' + minutesToHuman(minutesSinceMonthStarted.work);
   textArr.push(thisMonthtext);
 
-  const lastMonthText = 'Previous abrechnungs month: ' + minutesToHuman(minutesSincePreviousMonthStarted.work);
-  textArr.push(lastMonthText);
-
-  const praktikumPercent = Math.round(((praktikumMinutesDone / (praktikumHours * 60)) * 100) * 100) / 100;
-  const prakikumProgress = 'Progress Praktikum: Hours Done: ' + minutesToHuman(praktikumMinutesDone)  + ' (' + minutesToDecimalHours(praktikumMinutesDone) + 'h/' + praktikumPercent + ('% von 400 Stunden)');
-  textArr.push(prakikumProgress);
-
   infoElement.querySelector('#infoContent').innerText = textArr.join('\n');
 
-  // re add button event listener to new html elements
-  setTimeout(() => addButtonEventListeners(), 600);
-};
+  let noTime = !timeMinutesByWeek[thisWeek].work && !minutesSinceMonthStarted.work;
+  if (!timeMinutesByWeek[thisWeek-1]) {
+    noTime = true;
+  }
 
-const addButtonEventListeners = () => {
-  const eventListenerCallback = () => {
-    setTimeout(() => calculate(), 600);
-  };
-
-  const butons = document.querySelectorAll('a.btn');
-  for (let b of butons) {
-    b.removeEventListener('click', eventListenerCallback);
-    b.addEventListener('click', eventListenerCallback);
+  if (noTime) {
+    infoElement.style.display = 'none';
+  } else {
+    infoElement.style.display = 'block';
   }
 };
 
 window.addEventListener('load', () => {
+  const titleElement = document.querySelector('div.page-header');
+  onElementChange(titleElement, calculate);
+
   calculate();
-  addButtonEventListeners();
 });
