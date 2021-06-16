@@ -138,8 +138,8 @@ const calculate = () => {
     const lastWeekText = 'Last week: ' + minutesToHuman(timeMinutesByWeek[thisWeek-1].work);
     textArr.push(lastWeekText);
   }
-  const thisMonthtext = 'Abrechnungs month: ' + minutesToHuman(minutesSinceMonthStarted.work);
-  textArr.push(thisMonthtext);
+  // const thisMonthtext = 'Settlement month: ' + minutesToHuman(minutesSinceMonthStarted.work);
+  // textArr.push(thisMonthtext);
 
   infoElement.querySelector('#infoContent').innerText = textArr.join('\n');
 
