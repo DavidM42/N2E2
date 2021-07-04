@@ -1,14 +1,13 @@
 {
-  "name": "E2NCalculator",
+  "name": "N2E2",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "This extension calculates the time you worked in specific weeks and since my first day of this month.",
+  "description": "This extension calculates the time you worked this week and how long you worked today in minutes",
   "homepage_url": "https://github.com/DavidM42/E2NCalculator",
   "icons": {
-    "16": "icons/e2n16.png",
-    "32": "icons/e2n32.png",
-    "48": "icons/e2n48.png",
-    "128": "icons/e2n128.png"
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "background": {
     "scripts": [
@@ -27,6 +26,9 @@
       "js": [
         "src/inject/date-de-DE.js",
         "src/inject/calculate.js"
+      ],
+      "css": [
+        "src/inject/calculate.css"
       ]
     },
     {

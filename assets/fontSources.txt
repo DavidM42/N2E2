@@ -1,0 +1,2 @@
+font: https://www.fontspace.com/starjedi-special-edition-font-f9644
+glyphs font: https://www.fontspace.com/star-wars-kit-font-f33062
