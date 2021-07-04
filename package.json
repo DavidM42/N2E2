@@ -1,7 +1,7 @@
 {
   "name": "n2e2",
-  "version": "0.0.1",
-  "description": "This extension calculates the time you worked in specific weeks and since my first day of this month.",
+  "version": "0.0.2",
+  "description": "This extension calculates the time you worked this week and how long you worked today in minutes",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

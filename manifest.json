@@ -1,9 +1,9 @@
 {
   "name": "N2E2",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "manifest_version": 2,
   "description": "This extension calculates the time you worked this week and how long you worked today in minutes",
-  "homepage_url": "https://github.com/DavidM42/E2NCalculator",
+  "homepage_url": "https://github.com/DavidM42/N2E2",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
