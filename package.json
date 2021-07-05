@@ -1,6 +1,6 @@
 {
   "name": "n2e2",
-  "version": "0.0.2",
+  "version": "0.0.2.1",
   "description": "This extension calculates the time you worked this week and how long you worked today in minutes",
   "main": "index.js",
   "scripts": {
