@@ -141,18 +141,22 @@ const calculate = () => {
 
   const textArr = [];
 
-  // const thisWeekText = 'Diese Woche: ' + minutesToHuman(timeMinutesByWeek[thisWeek].work);
-  const thisWeekWork = minutesToHuman(timeMinutesByWeek[thisWeek].work);
-  const thisWeekPause = minutesToHuman(timeMinutesByWeek[thisWeek].pause);
-  const thisWeekText = `
-      <span class="weekTitle">Diese Woche</span>
-      <br>
-      ${fasClockSvg} ${thisWeekWork} Arbeit 
-      <br> 
-      ${fasCoffeeSvg} ${thisWeekPause} Pause
-  `;
-  textArr.push(thisWeekText);
+  // if theres was time at all this week add
+  const thisWeekTimeNotNull = timeMinutesByWeek[thisWeek] && (timeMinutesByWeek[thisWeek].work || timeMinutesByWeek[thisWeek].pause);
+  if (thisWeekTimeNotNull) {
+    const thisWeekWork = minutesToHuman(timeMinutesByWeek[thisWeek].work);
+    const thisWeekPause = minutesToHuman(timeMinutesByWeek[thisWeek].pause);
+    const thisWeekText = `
+        <span class="weekTitle">Diese Woche</span>
+        <br>
+        ${fasClockSvg} ${thisWeekWork} Arbeit 
+        <br>
+        ${fasCoffeeSvg} ${thisWeekPause} Pause
+    `;
+    textArr.push(thisWeekText);
+  }
 
+  // if theres was time at all last week
   if (timeMinutesByWeek[thisWeek-1]) {
     const lastWeekWork = minutesToHuman(timeMinutesByWeek[thisWeek-1].work);
     const lastWeekPause = minutesToHuman(timeMinutesByWeek[thisWeek-1].pause);
@@ -170,9 +174,12 @@ const calculate = () => {
 
   infoElement.querySelector('#infoContent').innerHTML = textArr.join('<br><br>');
 
+  // not display info if no time done this week (e.g. for previous months)
   let noTime = !timeMinutesByWeek[thisWeek].work && !minutesSinceMonthStarted.work;
-  if (!timeMinutesByWeek[thisWeek-1]) {
-    noTime = true;
+  
+  // this week no time but prevous week had had info so re-appear
+  if (noTime && timeMinutesByWeek[thisWeek-1]) {
+    noTime = false;
   }
 
   if (noTime) {
